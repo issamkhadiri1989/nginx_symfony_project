@@ -1,0 +1,70 @@
+services:
+    nginx:
+      image: nginx-nginx:latest
+      build:
+        context: ./infra/
+        args:
+          BUILD_ARGUMENT_ENV: dev
+        dockerfile: ./nginx/Dockerfile
+      container_name: "nginx_webserver"
+      restart: always
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - ./:/var/www/html:ro,cached
+        - ./infra/nginx/conf.d:/etc/nginx/conf.d
+      depends_on:
+        - symfony
+      networks:
+        - symfony
+
+    symfony:
+      image: php-symfony:latest
+      build:
+        context: ./infra/
+        dockerfile: ./php/Dockerfile
+      container_name: "symfony_project_server"
+      volumes:
+        - ./:/var/www/html:cached
+        - ./infra/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+        - ./infra/php/config/php.ini:/usr/local/etc/php/php.ini
+      depends_on:
+        - mysql
+      networks:
+        - symfony
+
+    mysql:
+      image: mysql
+      platform: linux/x86_64
+      container_name: "database_server"
+      command: --innodb-use-native-aio=${INNODB_USE_NATIVE_AIO:-1} --sql_mode=${SQL_MODE:-"ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"}
+      environment:
+        MYSQL_ROOT_PASSWORD: secret
+        MYSQL_DATABASE: symfony
+      ports:
+        - "3306:3306"
+      volumes:
+        - mysql:/var/lib/mysql:delegated
+      networks:
+        - symfony
+
+    myadmin:
+      image: phpmyadmin/phpmyadmin:5
+      environment:
+        PMA_HOST: mysql
+      ports:
+        - "8080:80"
+      depends_on:
+        - mysql
+      networks:
+        - symfony
+      volumes:
+        - db_admin_data:/var/www/html
+
+volumes:
+  db_admin_data:
+  mysql:
+networks:
+  symfony:
+    name: symfony
