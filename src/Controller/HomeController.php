@@ -17,4 +17,16 @@ class HomeController extends AbstractController
             'title' => 'this is a variable passed to twig template'
         ]);
     }
+
+    #[Route(path: "/contact-us", name: "app_contact_us")]
+    public function contact(): Response
+    {
+        return $this->render('page/contact.html.twig');
+    }
+
+    #[Route(path: "/about-us", name: "app_about")]
+    public function about(): Response
+    {
+        return $this->render('page/about.html.twig');
+    }
 }
