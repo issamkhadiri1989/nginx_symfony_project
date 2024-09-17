@@ -22,3 +22,6 @@ create:
 
 enter:
 	docker compose exec symfony bash
+
+restart-nginx:
+	docker compose exec nginx nginx -s reload
