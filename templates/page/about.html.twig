@@ -1,4 +1,9 @@
 {% extends 'layout.html.twig' %}
 {% block content %}
+
+    {{ render(controller('App\\Controller\\RecipeController::lastRecipes', {
+        max: 8
+    }))}}
+
 <p class="lead">This is the <strong>about us</strong> page </p>
 {% endblock content %}
