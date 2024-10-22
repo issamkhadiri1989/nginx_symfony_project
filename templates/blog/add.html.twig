@@ -1,23 +1,7 @@
 {% extends 'layout.html.twig' %}
+{% form_theme form 'form/theme/my_form_theme.html.twig'%}
 {% block content %}
     {{ form_start(form) }}
-    <div class="row">
-        <div class="col-3">
-            {{ form_label(form.title, variables: {
-                label_attr: {
-                    class: 'form-label'
-                }
-            }) }}
-        </div>
-        <div class="col-9">
-            {{ form_widget(form.title, variables: {
-                attr: {
-                    class: 'form-control',
-                    placeholder: 'Title of the blog'
-                }
-            }) }}
-        </div>
-        {{ form_errors(form.title) }}
-    </div>
+    {{ form_row(form) }}
     {{ form_end(form) }}
 {% endblock content %}

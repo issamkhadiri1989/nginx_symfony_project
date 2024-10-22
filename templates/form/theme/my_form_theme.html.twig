@@ -1,0 +1,14 @@
+{# templates/form/theme/my_form_theme.html.twig #}
+{% block _blog_title_row %}
+<div class="row">
+    {{ form_label(form, varibales: {
+        label_attr: {
+            class: 'form-label'
+        }
+    }) }}
+    <div class="col">
+        {{ form_widget(form, {attr: {class: 'form-control'}}) }}
+    </div>
+    {{ form_errors(form) }}
+</div>
+{% endblock _blog_title_row %}
