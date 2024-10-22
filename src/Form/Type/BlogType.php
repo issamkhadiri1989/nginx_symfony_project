@@ -6,7 +6,6 @@ namespace App\Form\Type;
 
 use App\DTO\Blog;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,7 +17,7 @@ class BlogType extends AbstractType
     {
         $builder->add('title', TextType::class)
             ->add('body', TextareaType::class)
-                ->add('submit', SubmitType::class);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
