@@ -29,4 +29,10 @@ class HomeController extends AbstractController
     {
         return $this->render('page/about.html.twig');
     }
+
+    #[Route(name: 'app_terms_and_conditions', path: "/termes-and-conditions")]
+    public function terms(): Response
+    {
+        return $this->render('page/terms.html.twig');
+    }
 }

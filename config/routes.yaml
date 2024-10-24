@@ -9,3 +9,21 @@ terms_and_conditions:
     controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
     defaults:
         template: page/terms.html.twig
+
+terms_of_use:
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    path: /credits
+    defaults:
+        route: app_terms_and_conditions
+        permanent: true # false (302 par défaut. Si true, le code sera 301)
+        keepRequestMethod: true # false. (si true, code = 308 si redirection permanente, 307 sinon)
+
+license:
+    controller: Symfony\Bundle\FrameworkBundle\TemplateController
+    path: /license
+    defaults:
+        template: 'page/license.html.twig'
+        # pour passer des variables:
+        context:
+            version: '1.0.0'
+            releaseDate: '20/01/2025'
