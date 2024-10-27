@@ -25,3 +25,8 @@ enter:
 
 restart-nginx:
 	docker compose exec nginx nginx -s reload
+
+down:
+	docker compose down
+
+restart: stop start
