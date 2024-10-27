@@ -29,10 +29,14 @@ services:
         - ./:/var/www/html:cached
         - ./infra/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
         - ./infra/php/config/php.ini:/usr/local/etc/php/php.ini
+        - ./infra/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       depends_on:
         - mysql
       networks:
         - symfony
+      expose:
+        - "9000"
+        - "9003"
 
     mysql:
       image: mysql
