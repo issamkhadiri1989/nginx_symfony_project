@@ -10,27 +10,27 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route(name: 'app_homepage', path: "/")]
+    #[Route(name: 'app_homepage', path: '/home')]
     public function homepage(): Response
     {
         return $this->render('page/homepage.html.twig', [
-            'title' => 'this is a variable passed to twig template'
+            'title' => 'this is a variable passed to twig template',
         ]);
     }
 
-    #[Route(path: "/contact-us", name: "app_contact_us")]
+    #[Route(path: '/contact-us', name: 'app_contact_us')]
     public function contact(): Response
     {
         return $this->render('page/contact.html.twig');
     }
 
-    #[Route(path: "/about-us", name: "app_about")]
+    #[Route(path: '/about-us', name: 'app_about')]
     public function about(): Response
     {
         return $this->render('page/about.html.twig');
     }
 
-    #[Route(name: 'app_terms_and_conditions', path: "/termes-and-conditions")]
+    #[Route(name: 'app_terms_and_conditions', path: '/termes-and-conditions')]
     public function terms(): Response
     {
         return $this->render('page/terms.html.twig');

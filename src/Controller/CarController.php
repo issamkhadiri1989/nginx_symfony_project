@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Car;
 use App\Repository\CarRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,8 +28,6 @@ class CarController extends AbstractController
         $manager->persist($car);
         $manager->flush();
 
-
-
         return $this->render('car/index.html.twig', [
             'controller_name' => 'CarController',
         ]);
@@ -49,14 +48,13 @@ class CarController extends AbstractController
 
         // ...
 
-
         return $this->render('car/index.html.twig', [
             'controller_name' => 'CarController',
             'car' => $car,
         ]);
     }
 
-    #[Route(path: "/car/delete/{id}", name: "app_car_delete")]
+    #[Route(path: '/car/delete/{id}', name: 'app_car_delete')]
     public function deleteCar(EntityManagerInterface $manager, Car $car): Response
     {
         $manager->remove($car);
@@ -69,7 +67,7 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route(path: "/car/add", name: "app_car_new")]
+    #[Route(path: '/car/add', name: 'app_car_new')]
     public function addNewCar(EntityManagerInterface $manager): Response
     {
         $car = new Car();
@@ -85,10 +83,9 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route(path: "/car/edit/{id}", name: "app_car_edit")]
+    #[Route(path: '/car/edit/{id}', name: 'app_car_edit')]
     public function editCar(EntityManagerInterface $manager, Car $car): Response
     {
-
         // ...
 
         $manager->flush();

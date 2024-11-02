@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategoryController!{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-6">
+        <div class="card mb-3">
+            <h3 class="card-header">
+                {{ category.name | upper }}
+            </h3>
+            <div class="accordion" id="accordionExample">
+                {% for book in category.books %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header collapsed" id="headingOne{{ loop.index }}">
+                            <button class="accordion-button"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne{{ loop.index }}"
+                                    aria-expanded="false"
+                                    aria-controls="collapseOne">
+                                {{ book.title }}
+                            </button>
+                        </h2>
+                        <div id="collapseOne{{ loop.index }}"
+                             class="accordion-collapse collapse"
+                             aria-labelledby="headingOne"
+                             data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                {{ book.description | raw }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

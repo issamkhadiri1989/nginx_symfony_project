@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -15,12 +16,10 @@ class RecipeController extends AbstractController
     {
         $response = new BinaryFileResponse();
 
-
         return $this->render('recipe/index.html.twig', [
             'controller_name' => 'RecipeController',
         ]);
     }
-
 
     public function lastRecipes(int $limit = 10): Response
     {

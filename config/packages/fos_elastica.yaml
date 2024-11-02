@@ -1,0 +1,38 @@
+fos_elastica:
+    clients:
+        default: { url: '%env(ELASTICSEARCH_URL)%' }
+    indexes:
+        books:
+            properties:
+                title:
+                    type: text
+                description:
+                    type: text
+                category:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                        name:
+                            type: keyword
+                        slug:
+                            type: keyword
+            persistence:
+                driver: orm
+                model: App\Entity\Book
+        categories:
+            properties:
+                name:
+                    type: text
+                slug:
+                    type: keyword
+                books:
+                    type: nested
+                    properties:
+                        title:
+                            type: text
+                        description:
+                            type: text
+            persistence:
+                driver: orm
+                model: App\Entity\Category

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CarRepository;
@@ -13,7 +15,7 @@ class Car
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, name: "custom_attribute")]
+    #[ORM\Column(length: 255, name: 'custom_attribute')]
     private ?string $registrationNumber = null;
 
     public function getId(): ?int
