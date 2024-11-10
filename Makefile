@@ -30,3 +30,7 @@ down:
 	docker compose down
 
 restart: stop start
+
+clear-cache:
+	docker compose exec varnish varnishadm "ban req.url ~ ."
+	docker compose exec symfony php bin/console c:c --no-warmup -e prod

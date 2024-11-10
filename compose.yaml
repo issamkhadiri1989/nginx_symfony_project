@@ -66,6 +66,17 @@ services:
       volumes:
         - db_admin_data:/var/www/html
 
+    varnish:
+      depends_on:
+        - nginx
+      build: ./infra/varnish
+      links:
+        - nginx
+      ports:
+        - 6081:6081
+      networks:
+        - symfony
+
 volumes:
   db_admin_data:
   mysql:
