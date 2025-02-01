@@ -10,7 +10,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
+        bind:
+            $requestLogger: '@monolog.logger.request'
+            $adminEmail: 'issam.khadiri@example.com'
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -22,3 +24,138 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    #    App\Service\:
+    #        resource: ../src/Service
+    #        bind:
+    #            $adminEmail: 'issam.khadiri@example.com'
+    #            $kernel: '@kernel'
+
+    App\Service\Container:
+        arguments:
+            $container: '@service_container'
+
+    #    App\Service\Hash\:
+    #        resource: ../src/Service/Hash
+
+    App\Service\MessageGenerator:
+        arguments:
+            $logger: '@monolog.logger.request'
+            $generateMessageHash: !closure '@App\Service\Hash\MessageHashGenerator'
+
+    app.command_handlers:
+        namespace: App\Domain\
+        resource: '../src/Domain/*/Handler'
+        tags: [ app.command_handler ]
+
+    app.event_subscribers:
+        namespace: App\Domain\
+        resource: '../src/Domain/*/EventSubscriber'
+        tags: [ app.event_subscriber ]
+
+    #####
+    site_update_manager.superadmin:
+        class: 'App\Service\SiteUpdateManager'
+        autowire: false
+        arguments:
+            $messageGenerator: '@App\Service\MessageGenerator'
+            $mailer: '@mailer'
+            $adminEmail: 'superadmin@example.com'
+
+    site_update_manager.normal_user:
+        class: 'App\Service\SiteUpdateManager'
+        arguments:
+            $messageGenerator: '@App\Service\MessageGenerator'
+            $mailer: '@mailer'
+            $adminEmail: 'contact@example.com'
+
+    #    App\Service\SiteUpdateManager: '@site_update_manager.superadmin'
+
+    #    App\Service\SiteUpdateManager:
+    #        bind:
+    #            $adminEmail: 'no-reply@test.com'
+    App\Domain\Order\Handler\DefaultOrderCommandHandler:
+        calls:
+            - setLogger: ['@monolog.logger.request']
+        tags:
+            - { name: 'app.domain.handler' }
+
+    app.message_formatter:
+        class: App\Service\MessageFormatterInterface
+        from_callable: [ !service { class: 'App\Service\MessageUtils' }, 'someFormatMessage' ]
+
+    #    _instanceof:
+    #        App\Domain\HandlerInterface:
+    #            tags: ['app.default_handler']
+
+    App\Mail\Transport\MailerSmtpTransport:
+        arguments: [ 'test' ]
+        tags:
+            - { name: 'app.mail_transport', alias: 'smtp' }
+
+    App\Mail\Transport\MailerSendmailTransport:
+        tags:
+            - { name: 'app.mail_transport', alias: [ 'sendmail', 'anotherAlias' ] }
+
+    App\HandlerCollection:
+        arguments:
+            - !tagged_iterator { tag: 'app.default_handler', exclude: [ 'App\Domain\User\Handler\DefaultUserCommandHandler' ], exclude_self: false, index_by: 'key' }
+        tags:
+            - { name: 'app.default_handler' }
+
+    App\Domain\User\Handler\DefaultUserCommandHandler:
+        tags:
+            - { name: 'app.domain.handler' }
+
+
+    App\Domain\DomainHandlerCollection:
+        arguments:
+            #            $domainCollection: !tagged_iterator { tag: 'app.domain.handler', index_by: 'key', default_priority_method: 'getPriority' }
+            $domainCollection: !tagged_iterator { tag: 'app.domain.handler', index_by: 'this_is_not_important' }
+
+    app.domain.handler.order:
+        alias: 'App\Domain\Order\Handler\DefaultOrderCommandHandler'
+
+    app.domain.handler.user: '@App\Domain\Order\Handler\DefaultOrderCommandHandler'
+
+    app.loggable_service:
+        abstract: true
+        class: App\Manager\AbstractManager
+        arguments:
+            $logger: '@monolog.logger.request'
+
+    App\Manager\FileManager:
+        parent: 'app.loggable_service'
+        arguments:
+            $logger: '@monolog.logger.console'
+
+    App\Manager\TimeManager:
+        parent: 'app.loggable_service'
+
+#    App\Factory\Manager\NewsletterManager:
+#        factory: [null, 'create']
+#        arguments:
+#            $sender: 'KHADIRI issam'
+
+    App\Factory\Manager\NewsletterManagerStaticFactory: ~
+#    App\Factory\Manager\NewsletterManager:
+#        factory: ['@App\Factory\Manager\NewsletterManagerStaticFactory', 'newInstance']
+#        arguments:
+#            $sender: 'KHADIRI issam'
+
+#    App\Factory\Manager\NewsletterManager:
+#        factory: '@App\Factory\Manager\NewsletterManagerStaticFactory'
+#        arguments:
+#            $sender: 'KHADIRI issam'
+
+
+    tracable_newsletter:
+        class: App\Factory\Manager\TracableNewsletterManagerStaticFactory
+
+    newsletter:
+        class: App\Factory\Manager\NewsletterManagerStaticFactory
+
+    App\Factory\Manager\NewsletterManager:
+#        factory: '@=parameter("kernel.debug") ? service("tracable_newsletter") : service("newsletter")'
+        factory: '@tracable_newsletter'
+        arguments:
+            $sender: 'KHADIRI issam'
