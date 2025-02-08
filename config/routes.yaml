@@ -27,3 +27,9 @@ license:
         context:
             version: '1.0.0'
             releaseDate: '20/01/2025'
+
+app.profile:
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    path: /profile
+    defaults:
+        route: app.empty_page

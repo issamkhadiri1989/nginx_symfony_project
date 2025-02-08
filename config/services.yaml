@@ -75,7 +75,7 @@ services:
     #            $adminEmail: 'no-reply@test.com'
     App\Domain\Order\Handler\DefaultOrderCommandHandler:
         calls:
-            - setLogger: ['@monolog.logger.request']
+            -   setLogger: [ '@monolog.logger.request' ]
         tags:
             - { name: 'app.domain.handler' }
 
@@ -131,21 +131,21 @@ services:
     App\Manager\TimeManager:
         parent: 'app.loggable_service'
 
-#    App\Factory\Manager\NewsletterManager:
-#        factory: [null, 'create']
-#        arguments:
-#            $sender: 'KHADIRI issam'
+    #    App\Factory\Manager\NewsletterManager:
+    #        factory: [null, 'create']
+    #        arguments:
+    #            $sender: 'KHADIRI issam'
 
     App\Factory\Manager\NewsletterManagerStaticFactory: ~
-#    App\Factory\Manager\NewsletterManager:
-#        factory: ['@App\Factory\Manager\NewsletterManagerStaticFactory', 'newInstance']
-#        arguments:
-#            $sender: 'KHADIRI issam'
+    #    App\Factory\Manager\NewsletterManager:
+    #        factory: ['@App\Factory\Manager\NewsletterManagerStaticFactory', 'newInstance']
+    #        arguments:
+    #            $sender: 'KHADIRI issam'
 
-#    App\Factory\Manager\NewsletterManager:
-#        factory: '@App\Factory\Manager\NewsletterManagerStaticFactory'
-#        arguments:
-#            $sender: 'KHADIRI issam'
+    #    App\Factory\Manager\NewsletterManager:
+    #        factory: '@App\Factory\Manager\NewsletterManagerStaticFactory'
+    #        arguments:
+    #            $sender: 'KHADIRI issam'
 
 
     tracable_newsletter:
@@ -155,7 +155,19 @@ services:
         class: App\Factory\Manager\NewsletterManagerStaticFactory
 
     App\Factory\Manager\NewsletterManager:
-#        factory: '@=parameter("kernel.debug") ? service("tracable_newsletter") : service("newsletter")'
+        #        factory: '@=parameter("kernel.debug") ? service("tracable_newsletter") : service("newsletter")'
         factory: '@tracable_newsletter'
         arguments:
             $sender: 'KHADIRI issam'
+
+    #    App\Security\UserChecker\:
+    #        resource: ../src/Security/UserChecker
+    #        tags:
+    #            - 'security.user_checker.main'
+    App\Security\UserChecker\EmailConfirmationChecker:
+        tags:
+            - { name: security.user_checker.main, priority: 10 }
+
+    App\Security\UserChecker\AccountDisabledChecker:
+        tags:
+            - { name: security.user_checker.main, priority: 5 }

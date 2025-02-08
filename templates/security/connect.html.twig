@@ -1,0 +1,12 @@
+{% if error %}
+    {{ error.messageKey | trans(error.messageData, 'security') }}
+{% endif %}
+<form method="post" action="{{ url('app.security.login') }}">
+    <label for="username">Username: </label>
+    <input type="text" name="_username" value="{{ last_username }}" id="username"/>
+    <label for="password">Password: </label>
+    <input type="text" name="_password" id="password" />
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+    <input type="hidden" name="_target_path" value="/"/>
+    <button type="submit">Connect</button>
+</form>

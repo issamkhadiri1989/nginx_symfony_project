@@ -10,6 +10,11 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ path('app_contact_us') }}">Contact us</a>
     </li>
+    {% if not is_granted('IS_AUTHENTICATED') %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app.security.login') }}">Connect</a>
+        </li>
+    {% else %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">{{  name  }}</a>
         <div class="dropdown-menu" data-bs-popper="static">
@@ -17,7 +22,8 @@
             <a class="dropdown-item" href="#">Another action</a>
             <a class="dropdown-item" href="#">Something else here</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
+            <a class="dropdown-item" href="{{ url('_logout_main') }}">Logout</a>
         </div>
     </li>
+    {% endif %}
 </ul>
